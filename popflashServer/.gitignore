@@ -12,7 +12,7 @@
 /build
 
 # misc
-/public/userPhotos
+/userPhotos
 .DS_Store
 .env.local
 .env.development.local

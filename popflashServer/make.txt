@@ -1,0 +1,5 @@
+*run server*
+docker run -e POSTGRES_PASSWORD=admin -p 5432:5432 -it --rm postgres:alpine3.18
+
+*how to use psql and run sql file*
+psql postgresql://postgres@localhost:5432/postgres -f database.sql
