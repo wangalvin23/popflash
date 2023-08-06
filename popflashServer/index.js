@@ -12,23 +12,43 @@ app.use(express.json());
 
 app.post("/api/login", async (req, res) => {
   const body = req.body;
-  const result = await pool.query(
-    `SELECT * FROM users WHERE username = $1 AND password = $2`,
-    [body.username, body.password]
-  );
-  console.log({ resultrows0: result.rows[0] });
+  let result;
   try {
+    result = await pool.query(
+      "SELECT id FROM users WHERE username = $1 AND password = $2",
+      [body.username, body.password]
+    );
+  } catch (e) {
+    console.error({ error: e });
+    res.status(500).json({ token: null });
+    return;
+  }
+  try {
+    if (result.rows.length !== 1) {
+      throw new Error("User Not Found");
+    }
     const token = jwt.sign({ id: result.rows[0].id }, auth.secret, {
       algorithm: "HS256",
       allowInsecureKeySizes: true,
       expiresIn: 86400,
     });
-    console.log({ token: token });
-    res.status(200).json({ token: token });
+    res.status(200).json({ id: result.rows[0].id, token: token });
   } catch (e) {
     console.error({ error: e });
     res.status(403).json({ token: null });
   }
+});
+
+app.get("/api/user/:username/flashes", async (req, res) => {
+  const username = req.params.username;
+  const userId = (
+    await pool.query("SELECT id FROM users WHERE username = $1", [username])
+  ).rows[0].id;
+  const result = await pool.query(
+    "SELECT id, flash, created_at FROM flashes WHERE userid = $1 ORDER BY created_at DESC LIMIT 20",
+    [userId]
+  );
+  res.status(200).json({ result: result.rows });
 });
 
 const verify = (token) => {
@@ -53,7 +73,7 @@ app.post("/api/verify", async (req, res) => {
   }
 });
 
-app.post("/api/flash", async (req, res) => {
+app.post("/api/popflash", async (req, res) => {
   const authHeader = req.get("Authorization").split(" ");
   if (authHeader.length !== 2 || authHeader[0] !== "Bearer") {
     res.status(401).end();

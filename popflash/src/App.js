@@ -2,16 +2,43 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
 import Dashboard from "./Dashboard";
+import Login from "./Login";
 import "./App.css";
 
 const App = () => {
+  const [currentUser, setCurrentUser] = useState({
+    token: null,
+    userId: null,
+    username: null,
+  });
+
   return (
     <div className="bodyContainer">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route
+            path="/"
+            element={
+              <Layout
+                currentUser={currentUser}
+                setCurrentUser={setCurrentUser}
+              />
+            }
+          >
             <Route index element={<h1>Home</h1>} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/dashboard/:username"
+              element={<Dashboard currentUser={currentUser} />}
+            />
+            <Route
+              path="/login"
+              element={
+                <Login
+                  currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
+                />
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

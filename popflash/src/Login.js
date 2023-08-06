@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import { useNavigate } from "react-router-dom";
 
-const Login = ({ setToken }) => {
+const Login = ({ currentUser, setCurrentUser }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [redo, setRedo] = useState(false);
@@ -17,19 +19,25 @@ const Login = ({ setToken }) => {
     });
     const body = await res.json();
     let changeRedo = false;
-    if (body.token !== null) {
-      setToken(body.token);
+    if (body.token) {
+      setCurrentUser({
+        token: body.token,
+        userId: body.id,
+        username: username,
+      });
+      navigate(`/dashboard/${username}`);
     } else {
       changeRedo = true;
     }
     setRedo(changeRedo);
   };
 
-  console.log({ username: username, password: password });
-  console.log({ redo: redo });
   return (
     <div className="loginContainer">
       <h1>Login Page</h1>
+      {currentUser.username && (
+        <h4>Currently Logged In as {currentUser.username}</h4>
+      )}
       <form className="userForm" onSubmit={handleSubmit}>
         <h3 htmlFor="userName">Username</h3>
         <input
