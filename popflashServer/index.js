@@ -96,10 +96,11 @@ app.post("/api/popflash", async (req, res) => {
   }
   const id = crypto.randomUUID();
   const userid = decoded.decoded.id;
+  const date = Date.now();
   try {
     await pool.query(
       "INSERT INTO flashes (id, userid, flash, created_at) VALUES ($1, $2, $3, $4)",
-      [id, userid, flash, Date.now()]
+      [id, userid, flash, date]
     );
     res.status(201).json({ id: id });
   } catch (e) {

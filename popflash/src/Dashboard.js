@@ -29,15 +29,25 @@ const Dashboard = ({ currentUser }) => {
     <div className="dashboardContainer">
       <>
         <h1>{params.username}</h1>
-        <button>Pop</button>
-        {flashes.map((element) => {
-          return (
-            <div key={element.id}>
-              <p>{element.flash}</p>
-              <p>{element.created_at}</p>
-            </div>
-          );
-        })}
+        {flashes.length ? (
+          flashes.map((element) => {
+            return (
+              <div
+                key={element.id}
+                style={{
+                  borderStyle: "solid",
+                  padding: "8px",
+                  width: "512px",
+                }}
+              >
+                <p>{element.flash}</p>
+                <time>{Date(element.created_at)}</time>
+              </div>
+            );
+          })
+        ) : (
+          <h2>No Flashes Posted</h2>
+        )}
       </>
     </div>
   );

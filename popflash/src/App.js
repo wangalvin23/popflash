@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Layout from "./Layout";
+import Home from "./Home";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
+import Post from "./Post";
 import "./App.css";
 
 const App = () => {
@@ -11,6 +13,7 @@ const App = () => {
     userId: null,
     username: null,
   });
+  //console.log(currentUser.token);
 
   return (
     <div className="bodyContainer">
@@ -25,7 +28,7 @@ const App = () => {
               />
             }
           >
-            <Route index element={<h1>Home</h1>} />
+            <Route index element={<Home />} />
             <Route
               path="/dashboard/:username"
               element={<Dashboard currentUser={currentUser} />}
@@ -39,6 +42,8 @@ const App = () => {
                 />
               }
             />
+            <Route path="/post" element={<Post currentUser={currentUser} />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -26,7 +26,10 @@ const Layout = ({ currentUser, setCurrentUser }) => {
         {isLoggedIn ? (
           <>
             <Link to={`/dashboard/${currentUser.username}`}>
-              <button type="button">Dashboard</button>
+              <button type="button">{currentUser.username}</button>
+            </Link>
+            <Link to="/post">
+              <button>Post</button>
             </Link>
             <button onClick={signOut}>Logout</button>
           </>
