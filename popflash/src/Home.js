@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+//testing comment to make sure that everything is ok
+
 const Home = () => {
   const [flashes, setFlashes] = useState([]);
 
