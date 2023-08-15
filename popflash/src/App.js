@@ -4,8 +4,22 @@ import Layout from "./Layout";
 import Home from "./Home";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
+import Signup from "./Signup";
 import Post from "./Post";
 import "./App.css";
+
+/*STUFF TO WORK ON
+ADD USER
+DELETE POST
+USER OPTIONS MENU {
+  CHANGE USERNAME
+  CHANGE PASSWORD
+  DELETE USER
+}
+HTTPONLY COOKIE FOR LOGIN TOKEN
+POST LIMIT HANDLING
+ERROR HANDLING
+*/
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState({
@@ -42,6 +56,7 @@ const App = () => {
                 />
               }
             />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/post" element={<Post currentUser={currentUser} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

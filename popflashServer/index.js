@@ -39,6 +39,36 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.post("/api/signup", async (req, res) => {
+  const id = crypto.randomUUID();
+  const body = req.body;
+  try {
+    const result = await pool.query(
+      "INSERT INTO users (id, username, password) VALUES ($1, $2, $3)",
+      [id, body.username, body.password]
+    );
+    res.status(201).end();
+  } catch (e) {
+    console.error({ error: e });
+    res.status(409).end();
+  }
+});
+
+app.get("/api/latest/flashes", async (req, res) => {
+  const result = (
+    await pool.query("SELECT * FROM flashes ORDER BY created_at DESC LIMIT 20")
+  ).rows;
+  for (let element of result) {
+    element.username = (
+      await pool.query("SELECT username FROM users WHERE id = $1", [
+        element.userid,
+      ])
+    ).rows[0].username;
+  }
+  console.log({ result: result });
+  res.status(200).json({ result: result });
+});
+
 app.get("/api/user/:username/flashes", async (req, res) => {
   const username = req.params.username;
   const userId = (
@@ -51,16 +81,7 @@ app.get("/api/user/:username/flashes", async (req, res) => {
   res.status(200).json({ result: result.rows });
 });
 
-const verify = (token) => {
-  try {
-    const decoded = jwt.verify(token, auth.secret);
-    return { decoded: decoded };
-  } catch (e) {
-    return { error: e };
-  }
-};
-
-app.post("/api/verify", async (req, res) => {
+/*app.post("/api/verify", async (req, res) => {
   const token = req.body.token;
   console.log({ sentToken: token });
   try {
@@ -71,7 +92,15 @@ app.post("/api/verify", async (req, res) => {
     console.error({ error: e });
     res.status(401).end();
   }
-});
+});*/
+const verify = (token) => {
+  try {
+    const decoded = jwt.verify(token, auth.secret);
+    return { decoded: decoded };
+  } catch (e) {
+    return { error: e };
+  }
+};
 
 app.post("/api/popflash", async (req, res) => {
   const authHeader = req.get("Authorization").split(" ");
@@ -84,7 +113,7 @@ app.post("/api/popflash", async (req, res) => {
     res.status(401).end();
     return;
   }
-  const flash = req.body.flash;
+  const flash = req.body.newFlash;
   if (typeof flash !== "string") {
     console.error("Flash not a string");
     res.status(400).end();

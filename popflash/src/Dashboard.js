@@ -38,6 +38,7 @@ const Dashboard = ({ currentUser }) => {
                   borderStyle: "solid",
                   padding: "8px",
                   width: "512px",
+                  overflowWrap: "break-word",
                 }}
               >
                 <p>{element.flash}</p>

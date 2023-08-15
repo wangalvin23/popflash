@@ -2,47 +2,27 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import { useNavigate } from "react-router-dom";
 
-const Login = ({ currentUser, setCurrentUser }) => {
+const Signup = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [redo, setRedo] = useState(false);
+  const [redo, setRedo] = useState(false); //use later to display error on input reqs
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/login", {
+    const res = await fetch("/api/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
     });
-    const body = await res.json();
-    let changeRedo = false;
-    if (body.token) {
-      setCurrentUser({
-        token: body.token,
-        userId: body.id,
-        username: username,
-      });
-      navigate(`/dashboard/${username}`);
-    } else {
-      changeRedo = true;
-    }
-    setRedo(changeRedo);
-  };
-
-  const handleSignup = (e) => {
-    navigate("/signup");
   };
 
   return (
-    <div className="loginContainer">
-      <h1>Login</h1>
-      {currentUser.username && (
-        <h4>Currently Logged In as {currentUser.username}</h4>
-      )}
-      <form className="userForm" onSubmit={handleSubmit}>
+    <div className="signupContainer">
+      <h1>Sign Up</h1>
+      <form className="signupForm" onSubmit={handleSubmit}>
         <h3 htmlFor="userName">Username</h3>
         <input
           type="text"
@@ -59,13 +39,10 @@ const Login = ({ currentUser, setCurrentUser }) => {
             setPassword(e.target.value);
           }}
         />
-        <button type="submit">Submit</button>
+        <button type="submit">Finish Sign Up</button>
       </form>
-      {redo && <h4>Incorrect Username / Password</h4>}
-      <h5>or</h5>
-      <button onClick={handleSignup}>Sign Up</button>
     </div>
   );
 };
 
-export default Login;
+export default Signup;
