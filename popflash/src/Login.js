@@ -36,6 +36,7 @@ const Login = ({ currentUser, setCurrentUser }) => {
     navigate("/signup");
   };
 
+  console.log({username: username, password: password})
   return (
     <div className="loginContainer">
       <h1>Login</h1>

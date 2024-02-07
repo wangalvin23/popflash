@@ -12,6 +12,7 @@ app.use(express.json());
 
 app.post("/api/login", async (req, res) => {
   const body = req.body;
+  console.log({body: body});
   let result;
   try {
     result = await pool.query(
